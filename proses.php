@@ -1,8 +1,8 @@
 <?php
 	$host = "localhost";
-	$user = "root";
-	$pass = "";
-	$db   = "db_login";
+	$user = "id21579097_meta";
+	$pass = "!Bnl4mpung";
+	$db   = "id21579097_meta";
 	$koneksi = mysqli_connect($host, $user, $pass, $db);
 ?>
 <!DOCTYPE html>
@@ -14,13 +14,13 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
-    <link rel="stylesheet" href="tema/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="tema/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="tema/dist/css/skins/_all-skins.min.css">
@@ -91,7 +91,8 @@
               </a>
             </li>
             <li><a href="proses.php?aksi=kelas"><i class="fa fa-book"></i> <span>KELAS</span></a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>DATA DOSEN</span></a></li>
+            <li><a href="proses.php?aksi=dosen"><i class="fa fa-circle-o text-red"></i> <span>DATA DOSEN</span></a></li>
+            <li><a href="proses.php?aksi=jurusan"><i class="fa fa-circle-o text-red"></i> <span>DATA JURUSAN</span></a></li>
           </ul>
         </section>
         <!-- /.sidebar -->
@@ -132,8 +133,14 @@ echo " <div class='col-md-12'>
      <input type='text' class='form-control' name='npm'>
      </div>
      <div class='form-group'>
-     <label for='exampleInputEmail1'>KELAS</label>
-     <input type='text' class='form-control' name='kelas'>
+     <label for='exampleSelect' class='form-label'>Select Example</label>
+        <select class='form-select' nama='kelas' aria-label='Example select with button addon'>
+            <option selected>Select an option</option>
+            <option value='1'>Option 1</option>
+            <option value='2'>Option 2</option>
+            <option value='3'>Option 3</option>
+        </select>
+     
      </div>
      <div class='form-group'>
        <label for='exampleInputEmail1'>EMAIL</label>
@@ -347,6 +354,202 @@ elseif($_GET['aksi']=='editkelas'){
     mysqli_query($koneksi,"DELETE FROM kelas  WHERE id_kelas='$_GET[id_kelas]'");
     echo "<script>window.location=('proses.php?aksi=kelas')</script>";
   }  
+  elseif($_GET['aksi']=='jurusan'){
+    echo"<div class='col-md-12'>
+    <div class='box box-primary'>
+       <div class='box-header with-border'>
+       <a class='btn btn-primary' href='index.php'>kembali</a>
+       <a class='btn btn-primary' href='proses.php?aksi=inputjurusan'><i class='fa fa-dashboard'></i> <span>INPUT DATA</span> </a></li>
+       </div><!-- /.box-header -->
+    <table class='table table-striped' >
+  <tbody>
+    <tr>
+    <td>no</td>
+      <td>nama</td>
+  
+      <td>aksi</td>
+    </tr> ";
+     $no=0;
+     $sql=mysqli_query($koneksi," SELECT * FROM jurusan");
+     while ($t=mysqli_fetch_array($sql)){	
+     $no++; 
+     echo"
+     <tr>
+     <td>$no</td>
+       <td>$t[nama_jurusan]</td>
+       <td><a href='proses.php?aksi=editjurusan&id_jurusan=$t[id_jurusan]'>edit</a> | <a href='proses.php?aksi=hapusjurusan&id_jurusan=$t[id_jurusan]'>hapus</a></td>
+     </tr>
+     ";
+     }
+     echo"</tbody>
+     </table>
+     </div><!-- /.box -->
+     </div><!-- /.col-->";
+  }
+  elseif($_GET['aksi']=='inputjurusan'){
+    echo " <div class='col-md-12'>
+    <div class='box box-primary'>
+       <div class='box-header with-border'>
+       </div><!-- /.box-header -->
+       <!-- form start -->
+       <form role='form' action='proses.php?aksi=prosesinputjurusan' name='form' method='post'>
+         <div class='box-body'>
+         <div class='form-group'>
+         <label for='exampleInputEmail1'>NAMA KELAS</label>
+         <input type='text' class='form-control' name='nama_jurusan'>
+         </div>
+        
+         </div><!-- /.box-body -->
+         <div class='box-footer'>
+         <button type='submit' class='btn btn-primary'>Submit</button>
+         </div>
+       </form>
+       </div><!-- /.box -->
+    </div><!-- /.col-->";  
+    }  
+    elseif($_GET['aksi']=='prosesinputjurusan'){
+      mysqli_query($koneksi,"insert into jurusan (nama_jurusan) 
+    values ('$_POST[nama_jurusan]')");  
+    echo "<script>window.location=('proses.php?aksi=jurusan')</script>";  
+  }  
+  elseif($_GET['aksi']=='editjurusan'){
+    $sql=mysqli_query($koneksi," SELECT * FROM jurusan WHERE id_jurusan=$_GET[id_jurusan]");  
+    $t=mysqli_fetch_array($sql);
+    echo " <div class='col-md-12'>
+    <div class='box box-primary'>
+       <div class='box-header with-border'>
+       </div><!-- /.box-header -->
+       <!-- form start -->
+       <form role='form' action='proses.php?aksi=proseseditjurusan&id_jurusan=$t[id_jurusan]' name='form' method='post'>
+         <div class='box-body'>
+         <div class='form-group'>
+         <label for='exampleInputEmail1'>NAMA KELAS</label>
+         <input type='text' class='form-control' value='$t[nama_jurusan]' name='nama_jurusan'>
+         </div>
+        
+         </div><!-- /.box-body -->
+         <div class='box-footer'>
+         <button type='submit' class='btn btn-primary'>Submit</button>
+         </div>
+       </form>
+       </div><!-- /.box -->
+    </div><!-- /.col-->";  
+    }  
+    elseif($_GET['aksi']=='proseseditjurusan'){
+      mysqli_query($koneksi,"UPDATE jurusan SET nama_jurusan='$_POST[nama_jurusan]'
+      WHERE id_jurusan='$_GET[id_jurusan]'");
+      echo "<script>window.location=('proses.php?aksi=jurusan')</script>";
+    }
+    elseif($_GET['aksi']=='hapusjurusan'){
+      mysqli_query($koneksi,"DELETE FROM jurusan  WHERE id_jurusan='$_GET[id_jurusan]'");
+      echo "<script>window.location=('proses.php?aksi=jurusan')</script>";
+    }  
+    elseif($_GET['aksi']=='dosen'){
+      echo"<div class='col-md-12'>
+      <div class='box box-primary'>
+         <div class='box-header with-border'>
+         <a class='btn btn-primary' href='index.php'>kembali</a>
+         <a class='btn btn-primary' href='proses.php?aksi=inputdosen'><i class='fa fa-dashboard'></i> <span>INPUT DATA</span> </a></li>
+         </div><!-- /.box-header -->
+      <table class='table table-striped' >
+    <tbody>
+      <tr>
+      <td>no</td>
+        <td>nama</td>
+        <td>nidn</td>
+        <td>aksi</td>
+      </tr> ";
+       $no=0;
+       $sql=mysqli_query($koneksi," SELECT * FROM dosen");
+       while ($t=mysqli_fetch_array($sql)){	
+       $no++; 
+       echo"
+       <tr>
+       <td>$no</td>
+         <td>$t[nama_dosen]</td>
+         <td>$t[nind]</td>
+         <td><a href='proses.php?aksi=editdosen&id_dosen=$t[id_dosen]'>edit</a> | <a href='proses.php?aksi=hapusdosen&id_dosen=$t[id_dosen]'>hapus</a></td>
+       </tr>
+       ";
+       }
+       echo"</tbody>
+       </table>
+       </div><!-- /.box -->
+       </div><!-- /.col-->";
+    }
+    elseif($_GET['aksi']=='inputdosen'){
+      echo " <div class='col-md-12'>
+      <div class='box box-primary'>
+         <div class='box-header with-border'>
+         </div><!-- /.box-header -->
+         <!-- form start -->
+         <form role='form' action='proses.php?aksi=prosesinputdosen' name='form' method='post'>
+           <div class='box-body'>
+           <div class='form-group'>
+           <label for='exampleInputEmail1'>NAMA DOSEN</label>
+           <input type='text' class='form-control' name='nama_dosen'>
+           </div>
+           <div class='form-group'>
+           <label for='exampleInputEmail1'>NIDN</label>
+           <input type='text' class='form-control' name='nind'>
+           </div>
+           <div class='form-group'>
+           <label for='exampleInputEmail1'>NOMOR HP</label>
+           <input type='text' class='form-control' name='no_hp'>
+           </div>
+           <div class='form-group'>
+           <label for='exampleInputEmail1'>ALAMAT</label>
+           <input type='text' class='form-control' name='alamat'>
+           </div>
+           <div class='form-group'>
+           <label for='exampleInputEmail1'>EMAIL DOSEN</label>
+           <input type='text' class='form-control' name='email_dosen'>
+           </div>
+           </div><!-- /.box-body -->
+           <div class='box-footer'>
+           <button type='submit' class='btn btn-primary'>Submit</button>
+           </div>
+         </form>
+         </div><!-- /.box -->
+      </div><!-- /.col-->";  
+      }  
+      elseif($_GET['aksi']=='prosesinputdosen'){
+        mysqli_query($koneksi,"insert into dosen (nama_dosen,no_hp,alamat) 
+      values ('$_POST[nama_dosen]','$_POST[no_hp]','$_POST[alamat]')");  
+      echo "<script>window.location=('proses.php?aksi=dosen')</script>";  
+    }  
+    elseif($_GET['aksi']=='editdosen'){
+      $sql=mysqli_query($koneksi," SELECT * FROM dosen WHERE id_dosen=$_GET[id_dosen]");  
+      $t=mysqli_fetch_array($sql);
+      echo " <div class='col-md-12'>
+      <div class='box box-primary'>
+         <div class='box-header with-border'>
+         </div><!-- /.box-header -->
+         <!-- form start -->
+         <form role='form' action='proses.php?aksi=proseseditdosen&id_dosen=$t[id_dosen]' name='form' method='post'>
+           <div class='box-body'>
+           <div class='form-group'>
+           <label for='exampleInputEmail1'>NAMA KELAS</label>
+           <input type='text' class='form-control' value='$t[nama_dosen]' name='nama_dosen'>
+           </div>
+          
+           </div><!-- /.box-body -->
+           <div class='box-footer'>
+           <button type='submit' class='btn btn-primary'>Submit</button>
+           </div>
+         </form>
+         </div><!-- /.box -->
+      </div><!-- /.col-->";  
+      }  
+      elseif($_GET['aksi']=='proseseditdosen'){
+        mysqli_query($koneksi,"UPDATE dosen SET nama_dosen='$_POST[nama_dosen]'
+        WHERE id_dosen='$_GET[id_dosen]'");
+        echo "<script>window.location=('proses.php?aksi=dosen')</script>";
+      }
+      elseif($_GET['aksi']=='hapusdosen'){
+        mysqli_query($koneksi,"DELETE FROM dosen  WHERE id_dosen='$_GET[id_dosen]'");
+        echo "<script>window.location=('proses.php?aksi=dosen')</script>";
+      }  
 ?>
           </div><!-- /.row (main row) -->
         </section><!-- /.content -->
